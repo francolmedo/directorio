@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio Médico CliMed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .qr-modal-animate { animation: zoomIn 0.2s ease-out; }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        /* Estilos del botón de WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #128c7e;
+        }
+        @media (min-width: 640px) {
+            .whatsapp-float {
+                width: auto;
+                height: auto;
+                padding: 12px 24px;
+                border-radius: 9999px;
+            }
+            .whatsapp-float::after {
+                content: "WhatsApp Climed";
+                margin-left: 10px;
+                font-weight: 700;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#f8fafc]">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const Icon = ({ name, size = 16, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>;
+        };
+
+        const directoryData = {
+            "DERMATOLOGÍA": [
+                { "medico": "SERVIDIO, LUCIANA", "telefono": "2215485238", "dias": "LUNES", "horario": "10 A 12 HS", "sede": "CENTRAL", "observaciones": "DIAR D" },
+                { "medico": "SOROKIN, IRENE", "telefono": "2215540164", "dias": "MIÉRCOLES", "horario": "13:30 A 16:30 HS", "sede": "MALVINAS", "observaciones": "CRIOCIRUGÍA" },
+                { "medico": "AMAYA, VALERIA", "telefono": "2215912203", "dias": "MARTES", "horario": "15 A 18 HS", "sede": "CENTRAL", "observaciones": "DIAR D" },
+                { "medico": "QUIROGA, FLORENCIA", "telefono": "2214945410", "dias": "MARTES", "horario": "09 A 12 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "REY, VICTORIA", "telefono": "2216172583", "dias": "LUNES", "horario": "11 A 13 HS", "sede": "MALVINAS", "observaciones": "DERMATOLOGÍA PEDIÁTRICA - EDAD PEDIÁTRICA" },
+                { "medico": "IRIGOYEN, GONZALO", "telefono": "2494211859", "dias": "JUEVES", "horario": "10:30 A 12:30 HS", "sede": "MALVINAS", "observaciones": "ETS" },
+                { "medico": "ESCALANTE, CAROLINA", "telefono": "2213163390 / 2213508182", "dias": "JUEVES / VIERNES", "horario": "14-17 HS (C/15 DÍAS) / 16-19 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "BASTERREIX, KARINA", "telefono": "2226498695", "dias": "MARTES", "horario": "09 A 11:30 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "BERGONZI, GUILLERMINA", "telefono": "2216227537", "dias": "MIE / JUE", "horario": "16-18 HS / 13-17 HS", "sede": "CENTRAL", "observaciones": "UNYQUE" },
+                { "medico": "NAVE, GUILLERMINA", "telefono": "2215232209", "dias": "LUN / JUE", "horario": "13 A 16:40 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "SCIAN, ROMINA", "telefono": "2215997654", "dias": "VIE / MIE", "horario": "09:30-12:30 / 16-18 HS", "sede": "CENTRAL / MALVINAS", "observaciones": "" },
+                { "medico": "FARAONE, MARCELA", "telefono": "2215349424", "dias": "MARTES", "horario": "16 A 19 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "GARRIDO, ANA", "telefono": "2216181414", "dias": "LUNES", "horario": "13:30 A 17:30 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "RAFTI, PATRICIA", "telefono": "2216022134", "dias": "MARTES", "horario": "09 A 13 HS", "sede": "CENTRAL / MALVINAS", "observaciones": "" }
+            ],
+            "GINECOLOGÍA Y OBSTETRICIA": [
+                { "medico": "HUGHES, NURI", "telefono": "2216177073", "dias": "MIÉRCOLES", "horario": "09 A 12 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "LA VALLE, SILVIA", "telefono": "2215616458", "dias": "VIERNES", "horario": "17:30 A 18:30 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "DE FRANCIA, VERONICA", "telefono": "2215370964", "dias": "LUN / JUE", "horario": "14-15 HS / 14-19 HS", "sede": "CENTRAL", "observaciones": "LUNES VIDEOASISTENCIA" },
+                { "medico": "MASTROPIERRO, AGUSTINA", "telefono": "2215347846", "dias": "LUNES", "horario": "14 A 16 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "DO SANTOS, LILIANA", "telefono": "2214349528", "dias": "MAR / VIE", "horario": "14-19 HS / 13:20-17 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "MASCAZZINI, ANTONELLA", "telefono": "2215464574", "dias": "LUN / JUE", "horario": "10-13 HS / 09-12 HS", "sede": "CENTRAL", "observaciones": "GINECO OBSTETRICIA Y ECOGRAFÍAS" },
+                { "medico": "RIVAROLA, BRENDA", "telefono": "3571456692", "dias": "LUN / MIE", "horario": "09-12 HS / 15-17 HS", "sede": "CENTRAL", "observaciones": "LUNES VIDEOASISTENCIA" }
+            ],
+            "CLÍNICA MÉDICA e INFECTOLOGÍA": [
+                { "medico": "DI LORENZO, CARLA", "telefono": "2215656947", "dias": "MAR / VIE", "horario": "17-19 HS / 15:15-18 HS", "sede": "CEN / MALV", "observaciones": "DEPORTÓLOGA - APTO FÍSICO, ANTROPOMETRÍA, BIOIMPEDANCIA" },
+                { "medico": "CARDO, EVA MAILEN", "telefono": "2215065414", "dias": "LUN / MIE", "horario": "14:30-16 / 13:30-15 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "RAELE, LAURA", "telefono": "2215775766", "dias": "MARTES", "horario": "16:30 A 18:30 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "MALACALZA, JULIANA", "telefono": "2216262071", "dias": "MARTES", "horario": "09:30 A 12:30 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "GUNTULIS, LEANDRO", "telefono": "2215934702", "dias": "LUN / MIE", "horario": "13-17 HS / 13-16 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "FERRARI, ELISEO", "telefono": "2215472452", "dias": "MAR / JUE", "horario": "14 A 16 HS", "sede": "CENTRAL", "observaciones": "" },
+                { "medico": "POGGIO, JUAN MANUEL", "telefono": "2215604134", "dias": "MARTES", "horario": "16:30 A 18:30 HS", "sede": "MALVINAS", "observaciones": "INFECTOLOGÍA" },
+                { "medico": "ROCCIA ROSSI, INES", "telefono": "2215085081", "dias": "MIÉRCOLES", "horario": "13 A 15 HS", "sede": "CENTRAL", "observaciones": "INFECTOLOGÍA" }
+            ],
+            "PEDIATRÍA": [
+                { "medico": "BOLOBANICH, KARINA", "telefono": "2215060286", "dias": "LUNES", "horario": "13 A 15 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "ACEVEDO, EMILIA", "telefono": "3704369370", "dias": "MARTES", "horario": "15 A 18 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "ACEBEDO, SOFIA", "telefono": "2215454184", "dias": "MIÉRCOLES", "horario": "17 A 19 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "GUILLERMO, VALERIA", "telefono": "2214349188", "dias": "MARTES", "horario": "16 A 18 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "RUSSO, SOFIA", "telefono": "2262411886", "dias": "MIÉRCOLES", "horario": "15 A 17 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "FERNANDEZ, NATALIA", "telefono": "11 30340594", "dias": "JUEVES", "horario": "15 A 17 HS", "sede": "MALVINAS", "observaciones": "" },
+                { "medico": "MIRO, MARCOS", "telefono": "2215659951", "dias": "MARTES", "horario": "14 A 19 HS", "sede": "MALVINAS", "observaciones": "" }
+            ],
+            "NUTRICIÓN y PSICOLOGÍA": [
+                { "medico": "PARENTE, BIANCA", "telefono": "2983533037", "dias": "MIE / JUE", "horario": "17-19 / 15-19 (C/15 DÍAS)", "sede": "CEN / MALV", "observaciones": "ANTROPOMETRÍA BIOIMPEDANCIA - ESP. EN GASTRO" },
+                { "medico": "AMIUNES, MARIA JOSE", "telefono": "2213647850", "dias": "LUNES", "horario": "13 A 19 HS", "sede": "MALVINAS", "observaciones": "NUTRICIÓN" },
+                { "medico": "ERRECART, MARIELA", "telefono": "2215221308", "dias": "MIÉRCOLES", "horario": "15:30 A 18:10 HS", "sede": "CENTRAL", "observaciones": "PSICOLOGÍA" },
+                { "medico": "BERMEGUI, LORENA", "telefono": "2215453695", "dias": "JUEVES", "horario": "14:15 A 16:30 HS", "sede": "MALVINAS", "observaciones": "PSIQUIATRÍA" }
+            ],
+            "ESPECIALIDADES y PRÁCTICAS": [
+                { "medico": "CUENCA, MARIA JOSE", "telefono": "2215371541", "dias": "VIERNES", "horario": "09 A 13 HS", "sede": "CENTRAL", "observaciones": "CARDIOLOGÍA - ECG, ECOCARDIOGRAMA, ECODOPPLER" },
+                { "medico": "CUELLO, ANALIA", "telefono": "2214857700", "dias": "MARTES", "horario": "15 A 17 HS", "sede": "MALVINAS", "observaciones": "CARDIOLOGÍA" },
+                { "medico": "RAVALLE, NATALIA", "telefono": "2215235169", "dias": "MIE / JUE", "horario": "14-17 / 14-16 HS", "sede": "MALVINAS", "observaciones": "CARDIOLOGÍA - MAPA, MDPA, HOLTER, ECG" },
+                { "medico": "KISS, SILVANA", "telefono": "2215250702", "dias": "MIÉRCOLES", "horario": "12 A 15 HS", "sede": "MALVINAS", "observaciones": "CIRUGÍA PLÁSTICA" },
+                { "medico": "AGUILA, RODRIGO", "telefono": "2215549421", "dias": "MAR / MIE", "horario": "13-15 / 14-16 HS", "sede": "CENTRAL", "observaciones": "REUMATOLOGÍA" },
+                { "medico": "BARABANI, CAROLINA", "telefono": "2216681800", "dias": "MIÉRCOLES", "horario": "09:30-11:30 (C/15 DÍAS)", "sede": "CENTRAL", "observaciones": "NEFROLOGÍA" },
+                { "medico": "PEREYRA, GABRIELA", "telefono": "2213031163", "dias": "MARTES", "horario": "11-13 HS (C/15 DÍAS)", "sede": "CENTRAL", "observaciones": "INMUNOLOGÍA" },
+                { "medico": "SCARPONI, ALICIA", "telefono": "2214971177", "dias": "LUN / MIE", "horario": "17-19 / 15-17 HS", "sede": "CEN / MALV", "observaciones": "GASTROENTEROLOGÍA" },
+                { "medico": "BECCIA, GUILLERMINA", "telefono": "1121707140", "dias": "MARTES", "horario": "17 A 18 HS", "sede": "CENTRAL", "observaciones": "ENDOCRINOLOGÍA" },
+                { "medico": "TAUS, GASTON", "telefono": "2215410242", "dias": "LUNES", "horario": "16 A 18 HS", "sede": "MALVINAS", "observaciones": "TRAUMATOLOGÍA" },
+                { "medico": "GATTI, MELISA", "telefono": "2215672756", "dias": "MAR / MIE / JUE", "horario": "Varios", "sede": "MALV / CEN", "observaciones": "COSMETOLOGÍA: LIMPIEZA, PEELING, DERMAPEN, UYNIQUE" }
+            ],
+            "IMÁGENES y LABORATORIO": [
+                { "medico": "ACERA, VIVIANA", "telefono": "2215402889", "dias": "MARTES", "horario": "09-10:30 / 17:30-19 HS", "sede": "CEN / MALV", "observaciones": "ECOGRAFÍAS: TODAS LAS ESPECIALIDADES" },
+                { "medico": "MASTROLEO, NICOLAS", "telefono": "2216377235", "dias": "Consultar", "horario": "Consultar", "sede": "CENTRAL", "observaciones": "PATOLOGÍA" },
+                { "medico": "BAGLIERI / FERRERI", "telefono": "2215342808 / 2215977192", "dias": "Consultar", "horario": "Consultar", "sede": "CENTRAL", "observaciones": "PATOLOGÍA" },
+                { "medico": "DABOR", "telefono": "2213097902", "dias": "Lunes a Viernes", "horario": "Mañana", "sede": "MALVINAS", "observaciones": "LABORATORIO DE ANÁLISIS" }
+            ]
+        };
+
+        function App() {
+            const [searchTerm, setSearchTerm] = useState('');
+            const [showShare, setShowShare] = useState(false);
+            const [copied, setCopied] = useState(false);
+            const [currentUrl, setCurrentUrl] = useState('');
+
+            useEffect(() => {
+                setCurrentUrl(window.location.href);
+            }, []);
+
+            const filteredData = useMemo(() => {
+                return Object.entries(directoryData).reduce((acc, [specialty, doctors]) => {
+                    const filteredDoctors = doctors.filter(doc => 
+                        doc.medico.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        doc.sede.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        doc.observaciones.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                    if (filteredDoctors.length > 0) acc[specialty] = filteredDoctors;
+                    return acc;
+                }, {});
+            }, [searchTerm]);
+
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentUrl)}`;
+
+            return (
+                <div className="min-h-screen pb-20 sm:pb-12">
+                    {/* Botón flotante de WhatsApp */}
+                    <a 
+                        href="https://wa.me/5492213161539" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="whatsapp-float"
+                    >
+                        <Icon name="message-circle" size={28} />
+                    </a>
+
+                    <div className="bg-[#004a61] text-white py-2 px-4 text-xs sm:text-sm sticky top-0 z-50">
+                        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+                            <div className="flex flex-wrap justify-center gap-4">
+                                <span className="flex items-center gap-1"><Icon name="map-pin" size={14} className="text-[#00d1d1]" /> Sede Malvinas: 50 esq 18</span>
+                                <span className="flex items-center gap-1 hidden md:flex"><Icon name="map-pin" size={14} className="text-[#00d1d1]" /> Sede Central: 56 esq 3</span>
+                            </div>
+                            <button onClick={() => setShowShare(true)} className="flex items-center gap-1 bg-[#00d1d1]/20 px-2 py-1 rounded hover:bg-[#00d1d1]/40">
+                                <Icon name="share-2" size={14} /> Compartir QR
+                            </button>
+                        </div>
+                    </div>
+
+                    <header className="bg-white border-b border-slate-200 pt-8 pb-10 px-4 shadow-sm">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h1 className="text-5xl font-extrabold tracking-tighter text-[#004a61] mb-2">CliMed</h1>
+                            <p className="text-[#00d1d1] font-bold tracking-widest text-xs uppercase mb-8">Centro Médico Interdisciplinario</p>
+                            <div className="relative max-w-2xl mx-auto">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Icon name="search" size={20} className="text-slate-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    className="block w-full pl-12 pr-4 py-4 border-2 border-slate-100 rounded-2xl bg-slate-50 focus:ring-4 focus:ring-[#00d1d1]/10 focus:border-[#00d1d1] outline-none transition-all text-lg shadow-inner"
+                                    placeholder="Buscar médico, especialidad o sede..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </header>
+
+                    {showShare && (
+                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+                            <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative qr-modal-animate text-center">
+                                <button onClick={() => setShowShare(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                                    <Icon name="x" size={24} />
+                                </button>
+                                <h3 className="text-xl font-bold text-[#004a61] mb-6">Acceso Rápido</h3>
+                                <div className="bg-slate-50 p-4 rounded-2xl mb-6 flex justify-center border border-slate-100">
+                                    <img src={qrUrl} alt="QR Climed" className="w-48 h-48" />
+                                </div>
+                                <p className="text-slate-500 text-sm mb-6">Escaneá para abrir el directorio en tu celular.</p>
+                                <button onClick={() => {
+                                    const el = document.createElement('textarea'); el.value = currentUrl; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+                                    setCopied(true); setTimeout(() => setCopied(false), 2000);
+                                }} className="w-full bg-[#004a61] text-white py-3 rounded-xl font-bold">
+                                    {copied ? "¡Copiado!" : "Copiar Enlace"}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <main className="max-w-6xl mx-auto px-4 mt-12 space-y-12">
+                        {Object.entries(filteredData).map(([specialty, doctors]) => (
+                            <div key={specialty}>
+                                <div className="flex items-center gap-4 mb-6">
+                                    <h2 className="text-2xl font-bold text-[#004a61]">{specialty}</h2>
+                                    <div className="h-0.5 bg-slate-200 flex-grow"></div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {doctors.map((doc, idx) => (
+                                        <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all relative">
+                                            <div className={`absolute top-0 right-0 px-3 py-1 text-[10px] font-bold rounded-bl-xl uppercase ${doc.sede.includes('CENTRAL') ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600'}`}>
+                                                {doc.sede}
+                                            </div>
+                                            <h3 className="text-lg font-bold text-slate-800 mb-4">{doc.medico}</h3>
+                                            <div className="space-y-2 text-slate-600 text-sm">
+                                                <div className="flex items-center gap-2 font-semibold text-[#004a61]">
+                                                    <Icon name="phone" size={14} /> {doc.telefono}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Icon name="calendar" size={14} /> {doc.dias}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Icon name="clock" size={14} /> {doc.horario}
+                                                </div>
+                                                {doc.observaciones && (
+                                                    <div className="mt-3 pt-3 border-t border-slate-50 italic text-xs text-slate-400">
+                                                        {doc.observaciones}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
