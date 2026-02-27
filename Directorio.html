@@ -3,21 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Directorio Médico CliMed</title>
+    <title>CliMed - Directorio Médico Completo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .qr-modal-animate { animation: zoomIn 0.2s ease-out; }
-        @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --climed-blue: #004a61;
+            --climed-teal: #00d1d1;
         }
-        /* Estilos del botón de WhatsApp */
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #fcfdfe;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .qr-modal-animate { animation: zoomIn 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
         .whatsapp-float {
             position: fixed;
             bottom: 24px;
@@ -30,32 +46,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.4);
             z-index: 100;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
         .whatsapp-float:hover {
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg);
             background-color: #128c7e;
         }
+
         @media (min-width: 640px) {
             .whatsapp-float {
                 width: auto;
                 height: auto;
                 padding: 12px 24px;
                 border-radius: 9999px;
+                gap: 8px;
             }
             .whatsapp-float::after {
-                content: "WhatsApp Climed";
-                margin-left: 10px;
+                content: "Pedir Turno";
                 font-weight: 700;
-                font-size: 14px;
+                font-size: 15px;
             }
+        }
+
+        .specialty-badge {
+            background: linear-gradient(135deg, var(--climed-blue), #006a8a);
+        }
+
+        .search-shadow {
+            box-shadow: 0 10px 40px -10px rgba(0, 74, 97, 0.15);
         }
     </style>
 </head>
-<body class="bg-[#f8fafc]">
+<body>
     <div id="root"></div>
 
     <script type="text/babel">
@@ -72,73 +97,73 @@
 
         const directoryData = {
             "DERMATOLOGÍA": [
-                { "medico": "SERVIDIO, LUCIANA", "telefono": "2215485238", "dias": "LUNES", "horario": "10 A 12 HS", "sede": "CENTRAL", "observaciones": "DIAR D" },
-                { "medico": "SOROKIN, IRENE", "telefono": "2215540164", "dias": "MIÉRCOLES", "horario": "13:30 A 16:30 HS", "sede": "MALVINAS", "observaciones": "CRIOCIRUGÍA" },
-                { "medico": "AMAYA, VALERIA", "telefono": "2215912203", "dias": "MARTES", "horario": "15 A 18 HS", "sede": "CENTRAL", "observaciones": "DIAR D" },
-                { "medico": "QUIROGA, FLORENCIA", "telefono": "2214945410", "dias": "MARTES", "horario": "09 A 12 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "REY, VICTORIA", "telefono": "2216172583", "dias": "LUNES", "horario": "11 A 13 HS", "sede": "MALVINAS", "observaciones": "DERMATOLOGÍA PEDIÁTRICA - EDAD PEDIÁTRICA" },
-                { "medico": "IRIGOYEN, GONZALO", "telefono": "2494211859", "dias": "JUEVES", "horario": "10:30 A 12:30 HS", "sede": "MALVINAS", "observaciones": "ETS" },
-                { "medico": "ESCALANTE, CAROLINA", "telefono": "2213163390 / 2213508182", "dias": "JUEVES / VIERNES", "horario": "14-17 HS (C/15 DÍAS) / 16-19 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "BASTERREIX, KARINA", "telefono": "2226498695", "dias": "MARTES", "horario": "09 A 11:30 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "BERGONZI, GUILLERMINA", "telefono": "2216227537", "dias": "MIE / JUE", "horario": "16-18 HS / 13-17 HS", "sede": "CENTRAL", "observaciones": "UNYQUE" },
-                { "medico": "NAVE, GUILLERMINA", "telefono": "2215232209", "dias": "LUN / JUE", "horario": "13 A 16:40 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "SCIAN, ROMINA", "telefono": "2215997654", "dias": "VIE / MIE", "horario": "09:30-12:30 / 16-18 HS", "sede": "CENTRAL / MALVINAS", "observaciones": "" },
-                { "medico": "FARAONE, MARCELA", "telefono": "2215349424", "dias": "MARTES", "horario": "16 A 19 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "GARRIDO, ANA", "telefono": "2216181414", "dias": "LUNES", "horario": "13:30 A 17:30 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "RAFTI, PATRICIA", "telefono": "2216022134", "dias": "MARTES", "horario": "09 A 13 HS", "sede": "CENTRAL / MALVINAS", "observaciones": "" }
+                { "medico": "SERVIDIO, LUCIANA", "telefono": "2215485238", "dias": "LUNES", "horario": "10 A 12 HS", "sede": "CENTRAL", "obs": "DIAR D" },
+                { "medico": "SOROKIN, IRENE", "telefono": "2215540164", "dias": "MIÉRCOLES", "horario": "13:30 A 16:30 HS", "sede": "MALVINAS", "obs": "CRIOCIRUGÍA" },
+                { "medico": "AMAYA, VALERIA", "telefono": "2215912203", "dias": "MARTES", "horario": "15 A 18 HS", "sede": "CENTRAL", "obs": "DIAR D" },
+                { "medico": "QUIROGA, FLORENCIA", "telefono": "2214945410", "dias": "MARTES", "horario": "09 A 12 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "REY, VICTORIA", "telefono": "2216172583", "dias": "LUNES", "horario": "11 A 13 HS", "sede": "MALVINAS", "obs": "PEDIÁTRICA" },
+                { "medico": "IRIGOYEN, GONZALO", "telefono": "2494211859", "dias": "JUEVES", "horario": "10:30 A 12:30 HS", "sede": "MALVINAS", "obs": "ETS" },
+                { "medico": "ESCALANTE, CAROLINA", "telefono": "2213163390", "dias": "JUE / VIE", "horario": "14-17 / 16-19 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "BASTERREIX, KARINA", "telefono": "2226498695", "dias": "MARTES", "horario": "09 A 11:30 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "BERGONZI, GUILLERMINA", "telefono": "2216227537", "dias": "MIE / JUE", "horario": "16-18 / 13-17 HS", "sede": "CENTRAL", "obs": "UNYQUE" },
+                { "medico": "NAVE, GUILLERMINA", "telefono": "2215232209", "dias": "LUN / JUE", "horario": "13 A 16:40 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "SCIAN, ROMINA", "telefono": "2215997654", "dias": "VIE / MIE", "horario": "Varios", "sede": "CENTRAL / MALV", "obs": "" },
+                { "medico": "FARAONE, MARCELA", "telefono": "2215349424", "dias": "MARTES", "horario": "16 A 19 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "GARRIDO, ANA", "telefono": "2216181414", "dias": "LUNES", "horario": "13:30 A 17:30 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "RAFTI, PATRICIA", "telefono": "2216022134", "dias": "MARTES", "horario": "09 A 13 HS", "sede": "CENTRAL / MALV", "obs": "" }
             ],
             "GINECOLOGÍA Y OBSTETRICIA": [
-                { "medico": "HUGHES, NURI", "telefono": "2216177073", "dias": "MIÉRCOLES", "horario": "09 A 12 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "LA VALLE, SILVIA", "telefono": "2215616458", "dias": "VIERNES", "horario": "17:30 A 18:30 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "DE FRANCIA, VERONICA", "telefono": "2215370964", "dias": "LUN / JUE", "horario": "14-15 HS / 14-19 HS", "sede": "CENTRAL", "observaciones": "LUNES VIDEOASISTENCIA" },
-                { "medico": "MASTROPIERRO, AGUSTINA", "telefono": "2215347846", "dias": "LUNES", "horario": "14 A 16 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "DO SANTOS, LILIANA", "telefono": "2214349528", "dias": "MAR / VIE", "horario": "14-19 HS / 13:20-17 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "MASCAZZINI, ANTONELLA", "telefono": "2215464574", "dias": "LUN / JUE", "horario": "10-13 HS / 09-12 HS", "sede": "CENTRAL", "observaciones": "GINECO OBSTETRICIA Y ECOGRAFÍAS" },
-                { "medico": "RIVAROLA, BRENDA", "telefono": "3571456692", "dias": "LUN / MIE", "horario": "09-12 HS / 15-17 HS", "sede": "CENTRAL", "observaciones": "LUNES VIDEOASISTENCIA" }
+                { "medico": "HUGHES, NURI", "telefono": "2216177073", "dias": "MIÉRCOLES", "horario": "09 A 12 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "LA VALLE, SILVIA", "telefono": "2215616458", "dias": "VIERNES", "horario": "17:30 A 18:30 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "DE FRANCIA, VERONICA", "telefono": "2215370964", "dias": "LUN / JUE", "horario": "14-19 HS", "sede": "CENTRAL", "obs": "LUNES VIRTUAL" },
+                { "medico": "MASTROPIERRO, AGUSTINA", "telefono": "2215347846", "dias": "LUNES", "horario": "14 A 16 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "DO SANTOS, LILIANA", "telefono": "2214349528", "dias": "MAR / VIE", "horario": "14-19 / 13-17 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "MASCAZZINI, ANTONELLA", "telefono": "2215464574", "dias": "LUN / JUE", "horario": "10-13 / 09-12 HS", "sede": "CENTRAL", "obs": "GINECO + ECOGRAFÍAS" },
+                { "medico": "RIVAROLA, BRENDA", "telefono": "3571456692", "dias": "LUN / MIE", "horario": "09-12 / 15-17 HS", "sede": "CENTRAL", "obs": "LUNES VIRTUAL" }
             ],
             "CLÍNICA MÉDICA e INFECTOLOGÍA": [
-                { "medico": "DI LORENZO, CARLA", "telefono": "2215656947", "dias": "MAR / VIE", "horario": "17-19 HS / 15:15-18 HS", "sede": "CEN / MALV", "observaciones": "DEPORTÓLOGA - APTO FÍSICO, ANTROPOMETRÍA, BIOIMPEDANCIA" },
-                { "medico": "CARDO, EVA MAILEN", "telefono": "2215065414", "dias": "LUN / MIE", "horario": "14:30-16 / 13:30-15 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "RAELE, LAURA", "telefono": "2215775766", "dias": "MARTES", "horario": "16:30 A 18:30 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "MALACALZA, JULIANA", "telefono": "2216262071", "dias": "MARTES", "horario": "09:30 A 12:30 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "GUNTULIS, LEANDRO", "telefono": "2215934702", "dias": "LUN / MIE", "horario": "13-17 HS / 13-16 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "FERRARI, ELISEO", "telefono": "2215472452", "dias": "MAR / JUE", "horario": "14 A 16 HS", "sede": "CENTRAL", "observaciones": "" },
-                { "medico": "POGGIO, JUAN MANUEL", "telefono": "2215604134", "dias": "MARTES", "horario": "16:30 A 18:30 HS", "sede": "MALVINAS", "observaciones": "INFECTOLOGÍA" },
-                { "medico": "ROCCIA ROSSI, INES", "telefono": "2215085081", "dias": "MIÉRCOLES", "horario": "13 A 15 HS", "sede": "CENTRAL", "observaciones": "INFECTOLOGÍA" }
+                { "medico": "DI LORENZO, CARLA", "telefono": "2215656947", "dias": "MAR / VIE", "horario": "17-19 / 15-18 HS", "sede": "CEN / MALV", "obs": "DEPORTÓLOGA - APTOS" },
+                { "medico": "CARDO, EVA MAILEN", "telefono": "2215065414", "dias": "LUN / MIE", "horario": "14:30 / 13:30 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "RAELE, LAURA", "telefono": "2215775766", "dias": "MARTES", "horario": "16:30 A 18:30 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "MALACALZA, JULIANA", "telefono": "2216262071", "dias": "MARTES", "horario": "09:30 A 12:30 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "GUNTULIS, LEANDRO", "telefono": "2215934702", "dias": "LUN / MIE", "horario": "13-17 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "FERRARI, ELISEO", "telefono": "2215472452", "dias": "MAR / JUE", "horario": "14 A 16 HS", "sede": "CENTRAL", "obs": "" },
+                { "medico": "POGGIO, JUAN MANUEL", "telefono": "2215604134", "dias": "MARTES", "horario": "16:30 A 18:30 HS", "sede": "MALVINAS", "obs": "INFECTOLOGÍA" },
+                { "medico": "ROCCIA ROSSI, INES", "telefono": "2215085081", "dias": "MIÉRCOLES", "horario": "13 A 15 HS", "sede": "CENTRAL", "obs": "INFECTOLOGÍA" }
             ],
             "PEDIATRÍA": [
-                { "medico": "BOLOBANICH, KARINA", "telefono": "2215060286", "dias": "LUNES", "horario": "13 A 15 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "ACEVEDO, EMILIA", "telefono": "3704369370", "dias": "MARTES", "horario": "15 A 18 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "ACEBEDO, SOFIA", "telefono": "2215454184", "dias": "MIÉRCOLES", "horario": "17 A 19 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "GUILLERMO, VALERIA", "telefono": "2214349188", "dias": "MARTES", "horario": "16 A 18 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "RUSSO, SOFIA", "telefono": "2262411886", "dias": "MIÉRCOLES", "horario": "15 A 17 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "FERNANDEZ, NATALIA", "telefono": "11 30340594", "dias": "JUEVES", "horario": "15 A 17 HS", "sede": "MALVINAS", "observaciones": "" },
-                { "medico": "MIRO, MARCOS", "telefono": "2215659951", "dias": "MARTES", "horario": "14 A 19 HS", "sede": "MALVINAS", "observaciones": "" }
+                { "medico": "BOLOBANICH, KARINA", "telefono": "2215060286", "dias": "LUNES", "horario": "13 A 15 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "ACEVEDO, EMILIA", "telefono": "3704369370", "dias": "MARTES", "horario": "15 A 18 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "ACEBEDO, SOFIA", "telefono": "2215454184", "dias": "MIÉRCOLES", "horario": "17 A 19 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "GUILLERMO, VALERIA", "telefono": "2214349188", "dias": "MARTES", "horario": "16 A 18 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "RUSSO, SOFIA", "telefono": "2262411886", "dias": "MIÉRCOLES", "horario": "15 A 17 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "FERNANDEZ, NATALIA", "telefono": "1130340594", "dias": "JUEVES", "horario": "15 A 17 HS", "sede": "MALVINAS", "obs": "" },
+                { "medico": "MIRO, MARCOS", "telefono": "2215659951", "dias": "MARTES", "horario": "14 A 19 HS", "sede": "MALVINAS", "obs": "" }
             ],
-            "NUTRICIÓN y PSICOLOGÍA": [
-                { "medico": "PARENTE, BIANCA", "telefono": "2983533037", "dias": "MIE / JUE", "horario": "17-19 / 15-19 (C/15 DÍAS)", "sede": "CEN / MALV", "observaciones": "ANTROPOMETRÍA BIOIMPEDANCIA - ESP. EN GASTRO" },
-                { "medico": "AMIUNES, MARIA JOSE", "telefono": "2213647850", "dias": "LUNES", "horario": "13 A 19 HS", "sede": "MALVINAS", "observaciones": "NUTRICIÓN" },
-                { "medico": "ERRECART, MARIELA", "telefono": "2215221308", "dias": "MIÉRCOLES", "horario": "15:30 A 18:10 HS", "sede": "CENTRAL", "observaciones": "PSICOLOGÍA" },
-                { "medico": "BERMEGUI, LORENA", "telefono": "2215453695", "dias": "JUEVES", "horario": "14:15 A 16:30 HS", "sede": "MALVINAS", "observaciones": "PSIQUIATRÍA" }
+            "NUTRICIÓN y SALUD MENTAL": [
+                { "medico": "PARENTE, BIANCA", "telefono": "2983533037", "dias": "MIE / JUE", "horario": "17-19 / 15-19 HS", "sede": "CEN / MALV", "obs": "ANTROPOMETRÍA - GASTRO" },
+                { "medico": "AMIUNES, MARIA JOSE", "telefono": "2213647850", "dias": "LUNES", "horario": "13 A 19 HS", "sede": "MALVINAS", "obs": "NUTRICIÓN" },
+                { "medico": "ERRECART, MARIELA", "telefono": "2215221308", "dias": "MIÉRCOLES", "horario": "15:30 A 18:10 HS", "sede": "CENTRAL", "obs": "PSICOLOGÍA" },
+                { "medico": "BERMEGUI, LORENA", "telefono": "2215453695", "dias": "JUEVES", "horario": "14:15 A 16:30 HS", "sede": "MALVINAS", "obs": "PSIQUIATRÍA" }
             ],
             "ESPECIALIDADES y PRÁCTICAS": [
-                { "medico": "CUENCA, MARIA JOSE", "telefono": "2215371541", "dias": "VIERNES", "horario": "09 A 13 HS", "sede": "CENTRAL", "observaciones": "CARDIOLOGÍA - ECG, ECOCARDIOGRAMA, ECODOPPLER" },
-                { "medico": "CUELLO, ANALIA", "telefono": "2214857700", "dias": "MARTES", "horario": "15 A 17 HS", "sede": "MALVINAS", "observaciones": "CARDIOLOGÍA" },
-                { "medico": "RAVALLE, NATALIA", "telefono": "2215235169", "dias": "MIE / JUE", "horario": "14-17 / 14-16 HS", "sede": "MALVINAS", "observaciones": "CARDIOLOGÍA - MAPA, MDPA, HOLTER, ECG" },
-                { "medico": "KISS, SILVANA", "telefono": "2215250702", "dias": "MIÉRCOLES", "horario": "12 A 15 HS", "sede": "MALVINAS", "observaciones": "CIRUGÍA PLÁSTICA" },
-                { "medico": "AGUILA, RODRIGO", "telefono": "2215549421", "dias": "MAR / MIE", "horario": "13-15 / 14-16 HS", "sede": "CENTRAL", "observaciones": "REUMATOLOGÍA" },
-                { "medico": "BARABANI, CAROLINA", "telefono": "2216681800", "dias": "MIÉRCOLES", "horario": "09:30-11:30 (C/15 DÍAS)", "sede": "CENTRAL", "observaciones": "NEFROLOGÍA" },
-                { "medico": "PEREYRA, GABRIELA", "telefono": "2213031163", "dias": "MARTES", "horario": "11-13 HS (C/15 DÍAS)", "sede": "CENTRAL", "observaciones": "INMUNOLOGÍA" },
-                { "medico": "SCARPONI, ALICIA", "telefono": "2214971177", "dias": "LUN / MIE", "horario": "17-19 / 15-17 HS", "sede": "CEN / MALV", "observaciones": "GASTROENTEROLOGÍA" },
-                { "medico": "BECCIA, GUILLERMINA", "telefono": "1121707140", "dias": "MARTES", "horario": "17 A 18 HS", "sede": "CENTRAL", "observaciones": "ENDOCRINOLOGÍA" },
-                { "medico": "TAUS, GASTON", "telefono": "2215410242", "dias": "LUNES", "horario": "16 A 18 HS", "sede": "MALVINAS", "observaciones": "TRAUMATOLOGÍA" },
-                { "medico": "GATTI, MELISA", "telefono": "2215672756", "dias": "MAR / MIE / JUE", "horario": "Varios", "sede": "MALV / CEN", "observaciones": "COSMETOLOGÍA: LIMPIEZA, PEELING, DERMAPEN, UYNIQUE" }
+                { "medico": "CUENCA, MARIA JOSE", "telefono": "2215371541", "dias": "VIERNES", "horario": "09 A 13 HS", "sede": "CENTRAL", "obs": "CARDIOLOGÍA - ECOCARDIOS" },
+                { "medico": "CUELLO, ANALIA", "telefono": "2214857700", "dias": "MARTES", "horario": "15 A 17 HS", "sede": "MALVINAS", "obs": "CARDIOLOGÍA" },
+                { "medico": "RAVALLE, NATALIA", "telefono": "2215235169", "dias": "MIE / JUE", "horario": "14-17 / 14-16 HS", "sede": "MALVINAS", "obs": "CARDIOLOGÍA - HOLTER/MAPA" },
+                { "medico": "KISS, SILVANA", "telefono": "2215250702", "dias": "MIÉRCOLES", "horario": "12 A 15 HS", "sede": "MALVINAS", "obs": "CIRUGÍA PLÁSTICA" },
+                { "medico": "AGUILA, RODRIGO", "telefono": "2215549421", "dias": "MAR / MIE", "horario": "13-15 / 14-16 HS", "sede": "CENTRAL", "obs": "REUMATOLOGÍA" },
+                { "medico": "BARABANI, CAROLINA", "telefono": "2216681800", "dias": "MIÉRCOLES", "horario": "09:30-11:30 HS", "sede": "CENTRAL", "obs": "NEFROLOGÍA" },
+                { "medico": "PEREYRA, GABRIELA", "telefono": "2213031163", "dias": "MARTES", "horario": "11-13 HS", "sede": "CENTRAL", "obs": "INMUNOLOGÍA" },
+                { "medico": "SCARPONI, ALICIA", "telefono": "2214971177", "dias": "LUN / MIE", "horario": "17-19 / 15-17 HS", "sede": "CEN / MALV", "obs": "GASTROENTEROLOGÍA" },
+                { "medico": "BECCIA, GUILLERMINA", "telefono": "1121707140", "dias": "MARTES", "horario": "17 A 18 HS", "sede": "CENTRAL", "obs": "ENDOCRINOLOGÍA" },
+                { "medico": "TAUS, GASTON", "telefono": "2215410242", "dias": "LUNES", "horario": "16 A 18 HS", "sede": "MALVINAS", "obs": "TRAUMATOLOGÍA" },
+                { "medico": "GATTI, MELISA", "telefono": "2215672756", "dias": "MAR/MIE/JUE", "horario": "Consultar", "sede": "MALV / CEN", "obs": "COSMETOLOGÍA" }
             ],
             "IMÁGENES y LABORATORIO": [
-                { "medico": "ACERA, VIVIANA", "telefono": "2215402889", "dias": "MARTES", "horario": "09-10:30 / 17:30-19 HS", "sede": "CEN / MALV", "observaciones": "ECOGRAFÍAS: TODAS LAS ESPECIALIDADES" },
-                { "medico": "MASTROLEO, NICOLAS", "telefono": "2216377235", "dias": "Consultar", "horario": "Consultar", "sede": "CENTRAL", "observaciones": "PATOLOGÍA" },
-                { "medico": "BAGLIERI / FERRERI", "telefono": "2215342808 / 2215977192", "dias": "Consultar", "horario": "Consultar", "sede": "CENTRAL", "observaciones": "PATOLOGÍA" },
-                { "medico": "DABOR", "telefono": "2213097902", "dias": "Lunes a Viernes", "horario": "Mañana", "sede": "MALVINAS", "observaciones": "LABORATORIO DE ANÁLISIS" }
+                { "medico": "ACERA, VIVIANA", "telefono": "2215402889", "dias": "MARTES", "horario": "Varios", "sede": "CEN / MALV", "obs": "ECOGRAFÍAS TODAS" },
+                { "medico": "MASTROLEO, NICOLAS", "telefono": "2216377235", "dias": "Consultar", "horario": "Consultar", "sede": "CENTRAL", "obs": "PATOLOGÍA" },
+                { "medico": "BAGLIERI / FERRERI", "telefono": "2215342808", "dias": "Consultar", "horario": "Consultar", "sede": "CENTRAL", "obs": "PATOLOGÍA" },
+                { "medico": "LABORATORIO DABOR", "telefono": "2213097902", "dias": "LUN A VIE", "horario": "Mañana", "sede": "MALVINAS", "obs": "ANÁLISIS CLÍNICOS" }
             ]
         };
 
@@ -146,11 +171,8 @@
             const [searchTerm, setSearchTerm] = useState('');
             const [showShare, setShowShare] = useState(false);
             const [copied, setCopied] = useState(false);
-            const [currentUrl, setCurrentUrl] = useState('');
-
-            useEffect(() => {
-                setCurrentUrl(window.location.href);
-            }, []);
+            
+            const currentUrl = "https://francolmedo.github.io/directorio/";
 
             const filteredData = useMemo(() => {
                 return Object.entries(directoryData).reduce((acc, [specialty, doctors]) => {
@@ -158,7 +180,7 @@
                         doc.medico.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         doc.sede.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        doc.observaciones.toLowerCase().includes(searchTerm.toLowerCase())
+                        (doc.obs && doc.obs.toLowerCase().includes(searchTerm.toLowerCase()))
                     );
                     if (filteredDoctors.length > 0) acc[specialty] = filteredDoctors;
                     return acc;
@@ -168,41 +190,42 @@
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(currentUrl)}`;
 
             return (
-                <div className="min-h-screen pb-20 sm:pb-12">
-                    {/* Botón flotante de WhatsApp */}
-                    <a 
-                        href="https://wa.me/5492213161539" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="whatsapp-float"
-                    >
+                <div className="min-h-screen pb-24">
+                    {/* Botón WhatsApp */}
+                    <a href="https://wa.me/5492213161539" target="_blank" className="whatsapp-float">
                         <Icon name="message-circle" size={28} />
                     </a>
 
-                    <div className="bg-[#004a61] text-white py-2 px-4 text-xs sm:text-sm sticky top-0 z-50">
-                        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-                            <div className="flex flex-wrap justify-center gap-4">
-                                <span className="flex items-center gap-1"><Icon name="map-pin" size={14} className="text-[#00d1d1]" /> Sede Malvinas: 50 esq 18</span>
-                                <span className="flex items-center gap-1 hidden md:flex"><Icon name="map-pin" size={14} className="text-[#00d1d1]" /> Sede Central: 56 esq 3</span>
+                    {/* Barra Superior */}
+                    <div className="bg-[#004a61] text-white py-2.5 px-4 text-xs font-medium sticky top-0 z-50">
+                        <div className="max-w-6xl mx-auto flex justify-between items-center">
+                            <div className="flex gap-4 overflow-hidden whitespace-nowrap">
+                                <span className="flex items-center gap-1.5"><Icon name="map-pin" size={12} className="text-[#00d1d1]" /> Malvinas: 50 esq 18</span>
+                                <span className="hidden sm:flex items-center gap-1.5"><Icon name="map-pin" size={12} className="text-[#00d1d1]" /> Central: 56 esq 3</span>
                             </div>
-                            <button onClick={() => setShowShare(true)} className="flex items-center gap-1 bg-[#00d1d1]/20 px-2 py-1 rounded hover:bg-[#00d1d1]/40">
-                                <Icon name="share-2" size={14} /> Compartir QR
+                            <button onClick={() => setShowShare(true)} className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full hover:bg-white/20 transition-colors">
+                                <Icon name="qr-code" size={12} /> Digitalizar
                             </button>
                         </div>
                     </div>
 
-                    <header className="bg-white border-b border-slate-200 pt-8 pb-10 px-4 shadow-sm">
-                        <div className="max-w-4xl mx-auto text-center">
-                            <h1 className="text-5xl font-extrabold tracking-tighter text-[#004a61] mb-2">CliMed</h1>
-                            <p className="text-[#00d1d1] font-bold tracking-widest text-xs uppercase mb-8">Centro Médico Interdisciplinario</p>
-                            <div className="relative max-w-2xl mx-auto">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    {/* Header */}
+                    <header className="bg-white pt-12 pb-16 px-6 text-center">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="mb-4 inline-block">
+                                <h1 className="text-6xl font-black text-[#004a61] tracking-tighter leading-none">CliMed</h1>
+                                <div className="h-1.5 w-full bg-[#00d1d1] mt-1 rounded-full"></div>
+                            </div>
+                            <p className="text-[#004a61] font-bold text-xs uppercase tracking-[0.3em] mb-12 opacity-80">Centro Médico Interdisciplinario</p>
+                            
+                            <div className="relative max-w-xl mx-auto search-shadow">
+                                <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
                                     <Icon name="search" size={20} className="text-slate-400" />
                                 </div>
                                 <input
                                     type="text"
-                                    className="block w-full pl-12 pr-4 py-4 border-2 border-slate-100 rounded-2xl bg-slate-50 focus:ring-4 focus:ring-[#00d1d1]/10 focus:border-[#00d1d1] outline-none transition-all text-lg shadow-inner"
-                                    placeholder="Buscar médico, especialidad o sede..."
+                                    className="w-full pl-14 pr-6 py-5 border-none rounded-2xl bg-white text-slate-800 focus:ring-4 focus:ring-[#00d1d1]/20 outline-none transition-all text-lg shadow-sm"
+                                    placeholder="Buscar médico o especialidad..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -210,62 +233,82 @@
                         </div>
                     </header>
 
+                    {/* Modal QR */}
                     {showShare && (
-                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-                            <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative qr-modal-animate text-center">
-                                <button onClick={() => setShowShare(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-[#004a61]/80 backdrop-blur-md">
+                            <div className="bg-white rounded-[2rem] p-10 max-w-sm w-full shadow-2xl relative qr-modal-animate text-center">
+                                <button onClick={() => setShowShare(false)} className="absolute top-6 right-6 text-slate-300 hover:text-slate-500 transition-colors">
                                     <Icon name="x" size={24} />
                                 </button>
-                                <h3 className="text-xl font-bold text-[#004a61] mb-6">Acceso Rápido</h3>
-                                <div className="bg-slate-50 p-4 rounded-2xl mb-6 flex justify-center border border-slate-100">
-                                    <img src={qrUrl} alt="QR Climed" className="w-48 h-48" />
+                                <div className="mb-6">
+                                    <h3 className="text-2xl font-extrabold text-[#004a61]">Directorio Digital</h3>
+                                    <p className="text-slate-400 text-sm mt-1 font-medium">Llevalo siempre con vos</p>
                                 </div>
-                                <p className="text-slate-500 text-sm mb-6">Escaneá para abrir el directorio en tu celular.</p>
+                                <div className="bg-slate-50 p-6 rounded-3xl mb-8 flex justify-center border border-slate-100 shadow-inner">
+                                    <img src={qrUrl} alt="QR Climed" className="w-52 h-52 mix-blend-multiply" />
+                                </div>
                                 <button onClick={() => {
                                     const el = document.createElement('textarea'); el.value = currentUrl; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
                                     setCopied(true); setTimeout(() => setCopied(false), 2000);
-                                }} className="w-full bg-[#004a61] text-white py-3 rounded-xl font-bold">
-                                    {copied ? "¡Copiado!" : "Copiar Enlace"}
+                                }} className={`w-full py-4 rounded-2xl font-bold transition-all shadow-lg ${copied ? 'bg-emerald-500 text-white' : 'bg-[#004a61] text-white hover:bg-[#003546]'}`}>
+                                    {copied ? "¡Enlace Copiado!" : "Copiar Enlace"}
                                 </button>
                             </div>
                         </div>
                     )}
 
-                    <main className="max-w-6xl mx-auto px-4 mt-12 space-y-12">
-                        {Object.entries(filteredData).map(([specialty, doctors]) => (
-                            <div key={specialty}>
-                                <div className="flex items-center gap-4 mb-6">
-                                    <h2 className="text-2xl font-bold text-[#004a61]">{specialty}</h2>
-                                    <div className="h-0.5 bg-slate-200 flex-grow"></div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {doctors.map((doc, idx) => (
-                                        <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all relative">
-                                            <div className={`absolute top-0 right-0 px-3 py-1 text-[10px] font-bold rounded-bl-xl uppercase ${doc.sede.includes('CENTRAL') ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600'}`}>
-                                                {doc.sede}
-                                            </div>
-                                            <h3 className="text-lg font-bold text-slate-800 mb-4">{doc.medico}</h3>
-                                            <div className="space-y-2 text-slate-600 text-sm">
-                                                <div className="flex items-center gap-2 font-semibold text-[#004a61]">
-                                                    <Icon name="phone" size={14} /> {doc.telefono}
+                    {/* Contenido Principal */}
+                    <main className="max-w-6xl mx-auto px-6 mt-8 space-y-16">
+                        {Object.entries(filteredData).length > 0 ? (
+                            Object.entries(filteredData).map(([specialty, doctors]) => (
+                                <div key={specialty} className="animate-in fade-in duration-500">
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <span className="specialty-badge text-white px-5 py-2 rounded-xl text-sm font-extrabold tracking-wider shadow-md">
+                                            {specialty}
+                                        </span>
+                                        <div className="h-px bg-slate-200 flex-grow"></div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {doctors.map((doc, idx) => (
+                                            <div key={idx} className="glass-card rounded-3xl p-7 hover:border-[#00d1d1] transition-all group relative overflow-hidden">
+                                                <div className={`absolute top-0 right-0 px-4 py-1.5 text-[10px] font-bold rounded-bl-2xl uppercase tracking-tighter shadow-sm ${doc.sede.includes('CENTRAL') ? 'bg-blue-600 text-white' : 'bg-[#00d1d1] text-[#004a61]'}`}>
+                                                    Sede {doc.sede}
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Icon name="calendar" size={14} /> {doc.dias}
+                                                <h3 className="text-xl font-extrabold text-slate-800 mb-5 group-hover:text-[#004a61] transition-colors leading-tight">{doc.medico}</h3>
+                                                <div className="space-y-3.5">
+                                                    <div className="flex items-center gap-3 font-bold text-[#004a61] bg-[#00d1d1]/5 p-2 rounded-xl border border-[#00d1d1]/10">
+                                                        <Icon name="phone" size={16} /> 
+                                                        <span>{doc.telefono}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-3 text-slate-600 text-sm font-medium pl-2">
+                                                        <Icon name="calendar" size={16} className="text-[#00d1d1]" /> 
+                                                        <span>{doc.dias}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-3 text-slate-500 text-sm font-medium pl-2">
+                                                        <Icon name="clock" size={16} className="text-[#00d1d1]" /> 
+                                                        <span>{doc.horario}</span>
+                                                    </div>
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <Icon name="clock" size={14} /> {doc.horario}
-                                                </div>
-                                                {doc.observaciones && (
-                                                    <div className="mt-3 pt-3 border-t border-slate-50 italic text-xs text-slate-400">
-                                                        {doc.observaciones}
+                                                {doc.obs && (
+                                                    <div className="mt-5 pt-4 border-t border-slate-100">
+                                                        <span className="bg-slate-50 text-slate-400 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                                                            {doc.obs}
+                                                        </span>
                                                     </div>
                                                 )}
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-slate-100">
+                                <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Icon name="user-x" size={32} className="text-slate-300" />
+                                </div>
+                                <p className="text-slate-400 font-bold">No se encontraron resultados para tu búsqueda.</p>
                             </div>
-                        ))}
+                        )}
                     </main>
                 </div>
             );
